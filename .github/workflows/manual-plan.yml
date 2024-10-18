@@ -1,0 +1,33 @@
+name: Manual Workflow for Terraform Plan
+
+# This workflow can be triggered manually via the GitHub Actions UI
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.8.0  # Specify the Terraform version to install
+
+    - name: Create tfvars file from secret
+      run: |
+        echo "${{ secrets.TFVARS }}" > secret.tfvars
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Fmt
+      run: terraform fmt
+
+    - name: Terraform Verify
+      run: terraform verify
+
+    - name: Terraform Plan
+      run: terraform plan -var-file=secret.tfvars

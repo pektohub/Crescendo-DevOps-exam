@@ -1,0 +1,35 @@
+name: Terraform Plan Workflow
+
+on:
+  push:
+    branches: [ dev ]
+
+jobs:
+  terraform-plan:
+    runs-on: ubuntu-latest
+    steps:
+    # Step 1: Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Install Terraform CLI
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.8.0  # Specify the Terraform version to install
+
+    - name: Create tfvars file from secret
+      run: |
+        echo "${{ secrets.TFVARS }}" > secret.tfvars
+    
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Fmt
+      run: terraform fmt
+
+    - name: Terraform Verify
+      run: terraform verify
+
+    - name: Terraform Plan
+      run: terraform plan -var-file=secret.tfvars

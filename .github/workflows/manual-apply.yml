@@ -1,0 +1,35 @@
+name: Manual Workflow for Terraform Apply
+
+# This workflow can be triggered manually via the GitHub Actions UI
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform-apply:
+    runs-on: ubuntu-latest
+    steps:
+    # Step 1: Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Step 2: Install Terraform CLI
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.8.0  # Specify the Terraform version to install
+
+    # Step 3: Initialize Terraform
+    - name: Terraform Init
+      run: terraform init
+
+    # Step 4: Format Terraform
+    - name: Terraform Fmt
+      run: terraform fmt
+
+    # Step 5: Verify Terraform
+    - name: Terraform Verify
+      run: terraform verify
+
+    # Step 6: Apply Terraform
+    - name: Terraform Apply
+      run: terraform apply -var-file=secret.tfvars --auto-approve

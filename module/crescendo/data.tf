@@ -1,5 +1,16 @@
 data "aws_availability_zones" "az" {}
-
+data "aws_vpc" "default-vpc" {
+  filter {
+    name    = "cidrBlock"
+    values  = ["172.31.0.0/16"]
+  } 
+}
+data "aws_subnet" "default-subnets" {
+  filter {
+    name   = "availabilityZone"
+    values = ["us-west-2a"] 
+  }
+}
 data "aws_ami" "ubuntu_24_04_lts" {
   most_recent = true
 
@@ -25,3 +36,4 @@ data "aws_ami" "ubuntu_24_04_lts" {
 
   owners = ["099720109477"] 
 }
+

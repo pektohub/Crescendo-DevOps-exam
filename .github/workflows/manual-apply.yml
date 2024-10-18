@@ -33,8 +33,8 @@ jobs:
     - name: Terraform Fmt
       run: terraform fmt
 
-    - name: Terraform Verify
-      run: terraform verify
+    - name: Terraform Validate
+      run: terraform validate
 
     - name: Terraform Apply
       run: terraform apply -var-file=secret.tfvars --auto-approve

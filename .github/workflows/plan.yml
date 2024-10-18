@@ -26,7 +26,7 @@ jobs:
 
     - name: Create tfvars file from secret
       run: |
-        echo "${{ secrets.TFVARS }}" > secret.tfvars
+        aws secretsmanager get-secret-value --secret-id ${{ secrets.SECRET_ARN }} --query SecretString --output text > secret.tfvars
     
     - name: Terraform Init
       run: terraform init

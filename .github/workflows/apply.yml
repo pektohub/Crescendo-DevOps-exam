@@ -11,11 +11,9 @@ jobs:
   terraform-apply:
     runs-on: ubuntu-latest
     steps:
-    # Step 1: Checkout the repository
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 2: Install Terraform CLI
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
       with:
@@ -28,18 +26,18 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-west-2
 
-    # Step 3: Initialize Terraform
+    - name: Create tfvars file from secret
+      run: |
+        aws secretsmanager get-secret-value --secret-id ${{ secrets.SECRET_ARN }} --query SecretString --output text > secret.tfvars
+
     - name: Terraform Init
       run: terraform init
 
-    # Step 4: Format Terraform
     - name: Terraform Fmt
       run: terraform fmt
 
-    # Step 5: Verify Terraform
-    - name: Terraform Verify
-      run: terraform verify
+    - name: Terraform Validate
+      run: terraform validate
 
-    # Step 6: Apply Terraform
     - name: Terraform Apply
       run: terraform apply -var-file=secret.tfvars --auto-approve

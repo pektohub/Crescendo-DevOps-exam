@@ -15,7 +15,7 @@ jobs:
       uses: hashicorp/setup-terraform@v2
       with:
         terraform_version: 1.8.0  # Specify the Terraform version to install
-        
+
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
@@ -25,7 +25,7 @@ jobs:
 
     - name: Create tfvars file from secret
       run: |
-        echo "${{ secrets.TFVARS }}" > secret.tfvars
+        aws secretsmanager get-secret-value --secret-id ${{ secrets.SECRET_ARN }} --query SecretString --output text > secret.tfvars
 
     - name: Terraform Init
       run: terraform init

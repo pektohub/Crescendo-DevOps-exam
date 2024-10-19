@@ -63,3 +63,5 @@ http {
 EOF
 systemctl enable nginx
 systemctl start nginx
+sleep 10
+systemctl restart nginx
